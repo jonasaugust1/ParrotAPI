@@ -1,14 +1,24 @@
-import express from 'express'
-import { AppDataSource } from './data-source';
+import "reflect-metadata";
+import express from "express";
+import * as bodyparser from "body-parser";
+import helmet from "helmet";
+import cors from "cors";
+import routes from "./routes"
+import { AppDataSource } from "./data-source";
 
-AppDataSource.initialize().then(() => {
-    const app = express()
+AppDataSource.initialize()
+    .then(() => {
+        const app  = express();
 
-    app.use(express.json())
+        // call middlewares
+        app.use(cors());
+        app.use(helmet());
+        app.use(bodyparser.json())
 
-    app.get('/', (req, res) => {
-        return res.json('Tudo certo')
+        app.use("/", routes);
+
+        app.listen(process.env.PORT, () => {
+            console.log("Tudo certo");
+        })
     })
-
-    return app.listen(process.env.PORT)
-})
+    .catch(error => console.log(error));

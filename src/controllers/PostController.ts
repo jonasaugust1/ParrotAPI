@@ -2,92 +2,111 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Post } from "../entities/Post";
 import { validate } from 'class-validator';
+import { userRepository } from './../repositories/userRepository';
+import { postRepository } from './../repositories/postRepository';
+import { FindOptionsWhere } from "typeorm";
+import { User } from "../entities/User";
 
 export class PostController {
 
-    static listAll = async (req: Request, res: Response) => {
-        const postRepository = AppDataSource.getRepository(Post)
+    async listAll(req: Request, res: Response) {
+
         const posts = await postRepository.find({select: ["idPost", "content", "user"]})
-
+        
         res.status(200).send(posts)
-    };
-
-    static getByUser = async (req: Request, res: Response) => {
-        const userId: any = req.params.user
-
-        const postRepository = AppDataSource.getRepository(Post)
-        let post: Post
-
-        try {
-             post = await postRepository.findOneOrFail({where: userId})
-
-             if(post) {
-                res.status(200).send(post)
-             }
-        } catch (error) {
-            res.status(404).send("Post not found")
-        }
-
     }
 
-    static newPost = async (req: Request, res: Response) => {
-        let {content} = req.body
 
-        let post: Post = new Post()
-        post.content = content
+    // static listAll = async (req: Request, res: Response) => {
+    //     const posts = await postRepository.find({
+    //         relations: {
+    //             user: true
+    //         },
+    //         select: {
+    //             user: {
+    //                 idUser: true,
+    //                 name: true,
+    //                 appartament: true,
+    //             }
+    //         }
+    //     })
 
-        const errors = await validate(post)
+    //     res.status(200).send(posts)
+    // };
 
-        if(errors.length > 0) {
-            res.status(400).send(errors);
-        }
-    };
+    // static getByUser = async (req: Request, res: Response) => {
+    //     const userId: FindOptionsWhere<User> = req.params.user
 
-    static editPost = async (req: Request, res: Response) => {
-        
-        const id: any = req.params.idPost;
+    //     const user = userRepository.findOneBy({userId})
+    //     let post: Post
 
-        const {content} = req.body;
+    //     try {
+    //          post = await postRepository.findOneOrFail({where: userId})
 
-        const userRepository = AppDataSource.getRepository(Post);
-        let post: Post;
+    //          if(post) {
+    //             res.status(200).send(post)
+    //          }
+    //     } catch (error) {
+    //         res.status(404).send("Post not found")
+    //     }
 
+    // }
+
+    async createPost(req: Request, res: Response) {
+        const {content} = req.body
+        const {idUser} = req.params
         try {
-            post = await userRepository.findOneOrFail({where: id})
+            const user = await userRepository.findOneBy({idUser: Number(idUser)})
 
-            if(content) {
-                post.content = content
-                res.status(204)
+            if(!user){
+                return res.status(404).json({message: "Usuário não existe"})
             }
 
-            const errors = await validate(post)
+            const newPost = postRepository.create({
+                content,
+                user
+            })
 
-            if(errors.length > 0){
-                res.status(400).send(errors)
-            }
+            await postRepository.save(newPost)
+
+            return res.status(201).json(newPost)
 
         } catch (error) {
-            res.status(404).send("Post not found")
+            console.log(error)
+            return res.status(500).json({message: "Internal Server Error"})
         }
-        
     }
 
-    static deletePost = async (req: Request, res: Response) => {
-            
-        const id: any = req.params.idPost;
-
-        const postRepository = AppDataSource.getRepository(Post);
-        let post: Post;
+    async deletePost(req: Request, res: Response) {
+        const {idPost} = req.params;
 
         try {
-            post = await postRepository.findOneOrFail({where: id});
+            const post = await postRepository.findOneBy({idPost: Number(idPost)});
         } catch (error) {
             res.status(404).send("Post not found");
         }
 
-        postRepository.delete(id);
+        postRepository.delete(post);
 
         res.status(204);
-    };
+    }
+
+    // static deletePost = async (req: Request, res: Response) => {
+            
+    //     const id: any = req.params.idPost;
+
+    //     const postRepository = AppDataSource.getRepository(Post);
+    //     let post: Post;
+
+    //     try {
+    //         post = await postRepository.findOneOrFail({where: id});
+    //     } catch (error) {
+    //         res.status(404).send("Post not found");
+    //     }
+
+    //     postRepository.delete(id);
+
+    //     res.status(204);
+    // };
 
 };

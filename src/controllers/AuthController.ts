@@ -1,42 +1,49 @@
 import { validate } from 'class-validator';
 import { Request, Response } from "express";
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { AppDataSource } from "../data-source";
 import { User } from "../entities/User";
 import config from "../config/config";
+import { userRepository } from '../repositories/userRepository';
+import bcrypt from "bcrypt"
+
+
 
 class AuthController {
-    static login = async (req: Request, res: Response) => {
-        let {email, password} = req.body
+    async login(req: Request, res: Response) {
 
-        if( !(email && password) ) {
-            return res.status(404).send()
+        const {email, password} = req.body
+
+        const user = await userRepository.findOneBy({email})
+
+        if(!user) {
+            return res.json({message: "E-mail ou senha inválidos"})
         }
 
-        const userRepository = AppDataSource.getRepository(User)
-        let user: User
+        const verifyPass = await bcrypt.compare(password, user.password)
 
-        try {
-            user = await userRepository.findOneOrFail({where: {email}})
-        } catch (error) {
-            return res.status(401).send("User not found")
-        }
-
-        if( !user.checkIfUnencryptedPasswordIsValid(password) ){
-            return res.status(401).send("Password or user is invalid")
+        if(!verifyPass) {
+            return res.json({message: "E-mail ou senha inválidos"})
         }
 
         const token = jwt.sign(
-            {
-             userId: user.idUser,
-             email: user.email
-            },
-             config.jwtSecret!,
-             {expiresIn: "1h"}
+            {id: user.idUser}, 
+            process.env.JWT_SECRET ?? '',
+            {expiresIn: '1h'}
         )
-        console.log(token)
-        return res.send(token)
-    } 
+
+        const {password: _, ...userLogin} = user
+
+        return res.json({
+            user: userLogin,
+            token: token
+        })
+    }
+
+    async getProfile(req: Request, res: Response) {
+        return res.json(req.user)
+    }
+ 
 
     static changePassword = async (req:Request, res: Response) => {
         
