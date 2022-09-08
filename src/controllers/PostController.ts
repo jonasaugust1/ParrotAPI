@@ -11,9 +11,18 @@ export class PostController {
 
     async listAll(req: Request, res: Response) {
 
-        const posts = await postRepository.find({select: ["idPost", "content", "user"]})
-        
-        res.status(200).send(posts)
+        try {
+            const users = await postRepository.find({
+                relations: {
+                    user: true
+                }
+            })
+
+            return res.json(users)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({message: "Internal Server Error"})
+        }
     }
 
 
@@ -77,36 +86,17 @@ export class PostController {
         }
     }
 
-    async deletePost(req: Request, res: Response) {
-        const {idPost} = req.params;
-
-        try {
-            const post = await postRepository.findOneBy({idPost: Number(idPost)});
-        } catch (error) {
-            res.status(404).send("Post not found");
-        }
-
-        postRepository.delete(post);
-
-        res.status(204);
-    }
-
-    // static deletePost = async (req: Request, res: Response) => {
-            
-    //     const id: any = req.params.idPost;
-
-    //     const postRepository = AppDataSource.getRepository(Post);
-    //     let post: Post;
+    // async deletePost(req: Request, res: Response) {
+    //     const {idPost} = req.params;
 
     //     try {
-    //         post = await postRepository.findOneOrFail({where: id});
+    //         const post = await postRepository.findOneBy({idPost: Number(idPost)});
     //     } catch (error) {
     //         res.status(404).send("Post not found");
     //     }
 
-    //     postRepository.delete(id);
+    //     postRepository.delete(post);
 
     //     res.status(204);
-    // };
-
+    // }
 };

@@ -21,22 +21,40 @@ export class UserController {
             return res.json(users)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({message: "Internal Server Error"})
+            return res.status(500).json({ message: "Internal Server Error" })
+        }
+    }
+
+    async listById(req: Request, res: Response) {
+        const { idUser } = req.params
+
+        try {
+            const user = await userRepository.findOneBy({ idUser: Number(idUser) })
+
+            if (!user) {
+                res.status(400).send("User not found")
+            }
+
+            return res.json(user)
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: "Internal Server Error" })
         }
     }
 
     async createUser(req: Request, res: Response) {
 
-        const {name, email, appartament, password} = req.body
+        const { name, email, appartament, password } = req.body
 
-        const userExists = await userRepository.findOneBy({email})
+        const userExists = await userRepository.findOneBy({ email })
 
-        if(userExists) {
-            return res.json({message: "E-mail já existe"})
+        if (userExists) {
+            return res.json({ message: "E-mail já existe" })
         }
 
-        if(!name || !email || !appartament || !password){
-            return res.status(400).json({message: "Argumentos faltando"})
+        if (!name || !email || !appartament || !password) {
+            return res.status(400).json({ message: "Argumentos faltando" })
         }
 
         const hashPassword = await bcrypt.hash(password, 10)
@@ -51,99 +69,61 @@ export class UserController {
 
             await userRepository.save(newUser)
 
-            const {password, ...user} = newUser
+            const { password, ...user } = newUser
 
             return res.status(201).json(user)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({message: "Internal Server Error"})
+            return res.status(500).json({ message: "Internal Server Error" })
         }
 
     }
 
-    async createPost(req: Request, res: Response) {
-        const {content} = req.body
-        const {idUser} = req.params
-        try {
-            const user = await userRepository.findOneBy({idUser: Number(idUser)})
+    async editUser(req: Request, res: Response) {
 
-            if(!user){
-                return res.status(404).json({message: "Usuário não existe"})
+        const { idUser } = req.params
+
+        const { name, email, appartament } = req.body
+
+        const userExists = await userRepository.findOneBy({ email })
+
+        if (userExists) {
+            return res.json({ message: "E-mail já existe" })
+        }
+
+        try {
+            const user = await userRepository.findOneBy({ idUser: Number(idUser) })
+
+            if (!user) {
+                return res.status(404).json({ message: "Usuário não existe" })
             }
 
-            const newPost = postRepository.create({
-                content,
-                user
+            const editedUser = userRepository.update(idUser, {
+                ...user,
+                name,
+                email,
+                appartament
             })
 
-            await postRepository.save(newPost)
-
-            return res.status(201).json(newPost)
-
+            res.status(204).json(editedUser)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({message: "Internal Server Error"})
+            return res.status(500).json({ message: "Internal Server Error" })
         }
+
     }
 
-   
+    async deleteUser(req: Request, res: Response) {
 
-   
-    // static editUser = async (req: Request, res: Response) => {
-        
-    //     const id: any = req.params.id
-
-    //     const {name, email, appartament} = req.body
-
-    //     const userRepository = AppDataSource.getRepository(User)
-    //     let user: User
-
-    //     try {
-    //         user = await userRepository.findOneOrFail({where: id})
-
-    //         if(name) {
-    //             user.name = name
-    //         }
-    
-    //         if(email) {
-    //             user.email = email
-    //         }
-    
-    //         if(appartament){
-    //             user.appartament = appartament
-    //         }
-
-    //         try {
-    //             await userRepository.save(user)
-    //         } catch (error) {
-    //             res.status(409).send("Email already in use")
-    //         }
-            
-    //         const errors = await validate(user)
-    //         if(errors.length > 0){
-    //             res.status(400).send(errors)
-    //         }
-    //     } catch (error) {
-    //         res.status(404).send("User not found")
-    //     }
-
-    //     res.status(204)
-    // }
-
-    static deleteUser = async (req: Request, res: Response) => {
-        
-        const id: any = req.params.idUser
-
-        const userRepository = AppDataSource.getRepository(User)
-        let user: User
+        const { idUser } = req.params
 
         try {
-            user = await userRepository.findOneOrFail({where: id})
+            const user = await userRepository.findOneBy({ idUser: Number(idUser) })
         } catch (error) {
             res.status(404).send("User not found")
         }
 
-        userRepository.delete(id)
+        userRepository.delete(idUser)
 
         res.status(204)
     }
