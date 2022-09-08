@@ -1,18 +1,19 @@
 import {Router} from "express"
+import {PostController} from '../controllers/PostController'
 
 const router = Router()
 
 // Get ALl
-router.get("/", )
+router.get("/", PostController.listAll)
 
-// Get by ID
-router.get("/:id", )
+// Get by User
+router.get("/:id", PostController.getByUser)
 
-router.post("/")
+router.post("/", PostController.newPost)
 
-router.put("/:id")
+router.put("/:id", PostController.editPost)
 
-router.delete('/:id')
+router.delete('/:id', PostController.deletePost)
 
 export default router
 
