@@ -1,11 +1,6 @@
 import { Request, Response } from "express";
-import { AppDataSource } from "../data-source";
-import { Post } from "../entities/Post";
-import { validate } from 'class-validator';
 import { userRepository } from './../repositories/userRepository';
 import { postRepository } from './../repositories/postRepository';
-import { FindOptionsWhere } from "typeorm";
-import { User } from "../entities/User";
 
 export class PostController {
 
@@ -26,40 +21,11 @@ export class PostController {
     }
 
 
-    // static listAll = async (req: Request, res: Response) => {
-    //     const posts = await postRepository.find({
-    //         relations: {
-    //             user: true
-    //         },
-    //         select: {
-    //             user: {
-    //                 idUser: true,
-    //                 name: true,
-    //                 appartament: true,
-    //             }
-    //         }
-    //     })
-
-    //     res.status(200).send(posts)
-    // };
-
-    // static getByUser = async (req: Request, res: Response) => {
-    //     const userId: FindOptionsWhere<User> = req.params.user
-
-    //     const user = userRepository.findOneBy({userId})
-    //     let post: Post
-
-    //     try {
-    //          post = await postRepository.findOneOrFail({where: userId})
-
-    //          if(post) {
-    //             res.status(200).send(post)
-    //          }
-    //     } catch (error) {
-    //         res.status(404).send("Post not found")
-    //     }
-
-    // }
+    async listById (req: Request, res: Response){
+        const {idPost} = req.params;
+        const userPosts = await postRepository.findOneBy({idPost: Number(idPost)})
+        return res.json(userPosts)
+    }
 
     async createPost(req: Request, res: Response) {
         const {content} = req.body
@@ -86,17 +52,21 @@ export class PostController {
         }
     }
 
-    // async deletePost(req: Request, res: Response) {
-    //     const {idPost} = req.params;
+    async destroy(req: Request, res: Response) {
+        try {
+          const { idPost } = req.params;
 
-    //     try {
-    //         const post = await postRepository.findOneBy({idPost: Number(idPost)});
-    //     } catch (error) {
-    //         res.status(404).send("Post not found");
-    //     }
+          const postDestroy = await postRepository.findOneBy({idPost: Number(idPost)});
 
-    //     postRepository.delete(post);
+          if (!postDestroy) {
+            return res.status(404).json("Id not found")
+          } else {
+            await postRepository.delete(idPost)
 
-    //     res.status(204);
-    // }
+          res.status(204).json(`${idPost} deleted`);
+          }
+        } catch (error) {
+          return res.status(400);
+        }
+      }
 };

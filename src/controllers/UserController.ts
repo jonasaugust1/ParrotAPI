@@ -1,10 +1,6 @@
-import { postRepository } from './../repositories/postRepository';
-import { Request, Response } from "express"
-import { AppDataSource } from "../data-source"
-import { User } from "../entities/User"
-import { validate } from 'class-validator';
+import { Request, Response } from "express";
 import { userRepository } from "../repositories/userRepository";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 
 
 export class UserController {
