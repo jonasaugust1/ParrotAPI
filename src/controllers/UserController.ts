@@ -66,29 +66,32 @@ export class UserController {
 
         try {
             user = await userRepository.findOneOrFail({where: id})
+
+            if(name) {
+                user.name = name
+            }
+    
+            if(email) {
+                user.email = email
+            }
+    
+            if(appartament){
+                user.appartament = appartament
+            }
+            
+            await userRepository.save(user)
+            const errors = await validate(user)
+            if(errors.length > 0){
+                res.status(400).send(errors)
+            }
         } catch (error) {
             res.status(404).send("User not found")
         }
 
-        if(name) {
-            user.name = name
-        }
-
-        if(email) {
-            user.email = email
-        }
-
-        if(appartament){
-            user.appartament = appartament
-        }
-
-        const errors = await validate(user)
-        if(errors.length > 0){
-            res.status(400).send(errors)
-        }
+       
 
         try {
-            await userRepository.save(user)
+            
         } catch (error) {
             res.status(409).send("Email already in use")
         }

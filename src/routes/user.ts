@@ -1,18 +1,29 @@
-import {Router} from "express"
+import { Router } from "express";
+import { UserController } from "../controllers/UserController";
+import {checkJwt} from "../middlewares/checkjwt";
 
-const router = Router()
+const router = Router();
+router.get("/", [checkJwt], UserController.listAll);
 
-// Get ALl
-router.get("/", )
+router.get(
+    "/:id([0-9]+)",
+    [checkJwt],
+    UserController.getOneById
+);
 
-// Get by ID
-router.get("/:id", )
+router.post("/", [checkJwt], UserController.newUser);
 
-router.post("/")
+router.put(
+    "/:id([0-9]+)",
+    [checkJwt],
+    UserController.editUser
+);
 
-router.put("/:id")
+router.delete(
+    "/id:([0-9]+)",
+    [checkJwt],
+    UserController.deleteUser
+)
 
-router.delete('/:id')
-
-export default router
+export default router;
 

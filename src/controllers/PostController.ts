@@ -59,14 +59,17 @@ export class PostController {
                 post.content = content
                 res.status(204)
             }
+
+            const errors = await validate(post)
+
+            if(errors.length > 0){
+                res.status(400).send(errors)
+            }
+
         } catch (error) {
             res.status(404).send("Post not found")
         }
-
-        // const errors = await validate(post)
-        // if(errors.length > 0){
-        //     res.status(400).send(errors)
-        // }
+        
     }
 
     static deletePost = async (req: Request, res: Response) => {
