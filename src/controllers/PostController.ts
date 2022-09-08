@@ -13,16 +13,15 @@ export class PostController {
     };
 
     static newPost = async (req: Request, res: Response) => {
-        let {content, userId} = req.body
+        let {content} = req.body
 
         let post: Post = new Post()
         post.content = content
-        post.user = userId
 
         const errors = await validate(post)
 
         if(errors.length > 0) {
-            res.status(400).send(errors)
+            res.status(400).send(errors);
         }
     };
 
@@ -30,35 +29,31 @@ export class PostController {
         
         const id: any = req.params.idPost;
 
-        const {content, userId} = req.body;
+        const {content} = req.body;
 
-        const postRepository = AppDataSource.getRepository(Post);
+        const userRepository = AppDataSource.getRepository(Post);
         let post: Post;
 
         try {
-            post = await postRepository.findOneOrFail({where: id});
+            post = await userRepository.findOneOrFail({where: id})
         } catch (error) {
-            res.status(404).send("Post not found");
+            res.status(404).send("Post not found")
         }
 
         if(content) {
-            post.content = content;
+            post.content = content
         }
 
-        if(userId) {
-            post.user = userId;
-        }
-
-        const errors = await validate(post);
+        const errors = await validate(post)
         if(errors.length > 0){
-            res.status(400).send(errors);
+            res.status(400).send(errors)
         }
 
-        res.status(204);
-    };
+        res.status(204)
+    }
 
     static deletePost = async (req: Request, res: Response) => {
-        
+            
         const id: any = req.params.idPost;
 
         const postRepository = AppDataSource.getRepository(Post);
