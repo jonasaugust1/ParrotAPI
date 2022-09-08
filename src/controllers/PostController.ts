@@ -25,6 +25,16 @@ export class PostController {
         }
     }
 
+    async listById (req: Request, res: Response){
+        const idLogado = req.user.idUser;
+        const userPosts = await postRepository.find({
+            where:{
+                    user:{
+                            idUser:idLogado
+                    }
+        }});
+        return res.json(userPosts)
+    }
 
     // static listAll = async (req: Request, res: Response) => {
     //     const posts = await postRepository.find({
@@ -99,4 +109,22 @@ export class PostController {
 
     //     res.status(204);
     // }
+
+    async destroy(req: Request, res: Response) {
+        try {
+          const { idPost } = req.params;
+    
+          const postDestroy = await postRepository.findOneBy({idPost: Number(idPost)});
+    
+          if (!postDestroy) {
+            return res.status(404).json("Id not found")
+          } else {
+            await postRepository.delete(idPost)
+    
+          res.status(204).json(`${idPost} deleted`);
+          }
+        } catch (error) {
+          return res.status(400);
+        }
+      }
 };
