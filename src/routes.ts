@@ -6,18 +6,22 @@ import { checkJwt } from './middlewares/checkjwt';
 
 const routes = Router()
 
+routes.post('/user', new UserController().createUser)
+routes.post('/login', new AuthController().login)
+
+
 routes.post('/user/:idUser/create', new PostController().createPost)
 routes.get('/post', new PostController().listAll)
 routes.get('/post/:idPost', new PostController().listById)
 routes.delete('/post/:idPost', new PostController().destroy)
 
-routes.post('/user', new UserController().createUser)
+
 routes.get('/user', new UserController().listAll)
 routes.get('/user/:idUser', new UserController().listById)
 routes.put('/user/:idUser', new UserController().editUser)
 routes.delete('/user/:idUser', new UserController().deleteUser)
 
-routes.post('/login', new AuthController().login)
+
 
 routes.get('/profile', checkJwt, new AuthController().getProfile)
 
