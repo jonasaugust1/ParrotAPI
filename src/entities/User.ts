@@ -36,8 +36,6 @@ export class User {
     @OneToMany(() => Post, (post) => post.user)
     post: Post[]
 
-    
-
     hashPassword() {
         this.password = bcrypt.hashSync(this.password, 8)
     }
