@@ -10,16 +10,16 @@ routes.post('/user', new UserController().createUser)
 routes.post('/login', new AuthController().login)
 
 
-routes.post('/user/:idUser/create', new PostController().createPost)
-routes.get('/post', new PostController().listAll)
-routes.get('/post/:idPost', new PostController().listById)
-routes.delete('/post/:idPost', new PostController().destroy)
+routes.post('/user/:idUser/create', checkJwt, new PostController().createPost)
+routes.get('/post', checkJwt, new PostController().listAll)
+routes.get('/post/:idPost', checkJwt, new PostController().listById)
+routes.delete('/post/:idPost', checkJwt, new PostController().destroy)
 
 
-routes.get('/user', new UserController().listAll)
-routes.get('/user/:idUser', new UserController().listById)
-routes.put('/user/:idUser', new UserController().editUser)
-routes.delete('/user/:idUser', new UserController().deleteUser)
+routes.get('/user', checkJwt, new UserController().listAll)
+routes.get('/user/:idUser', checkJwt, new UserController().listById)
+routes.put('/user/:idUser', checkJwt, new UserController().editUser)
+routes.delete('/user/:idUser', checkJwt, new UserController().deleteUser)
 
 
 

@@ -8,7 +8,7 @@ import { AppDataSource } from "./data-source";
 
 AppDataSource.initialize()
     .then(() => {
-        const app  = express();
+        const app = express();
 
         // call middlewares
         app.use(cors());

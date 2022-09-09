@@ -1,5 +1,11 @@
 {
 	"compilerOptions": {
+		"types": [
+            "jest",
+            "node",
+			"@types/jest",
+			"ts-jest"
+        ],
 		"target": "es2018",
 		"lib": ["es5", "es6", "ES2018"],
 		"experimentalDecorators": true,
@@ -8,17 +14,20 @@
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"allowJs": true,
+		"rootDir": "./src",
 		"outDir": "./dist",
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"strict": true,
 		"noImplicitAny": true,
 		"strictPropertyInitialization": false,
+		"skipLibCheck": true,
 		"typeRoots": ["./src/@types"]
 	},
-	"include": ["src/**/*"],
-	"exclude": ["node_modules", "dist"],
+	"include": ["src/**/*", "tests/**/*", "**/*.spec.ts", "__tests__/routes/routes.test.ts",],
+	"exclude": ["./coverage", "./dist", "__tests__", "jest.config.ts"],
 	"ts-node": {
+		"transpileOnly": true,
 		"files": true
 	}
 }
