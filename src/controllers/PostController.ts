@@ -20,7 +20,6 @@ export class PostController {
         }
     }
 
-
     async listById (req: Request, res: Response){
         const {idPost} = req.params;
         const userPosts = await postRepository.findOneBy({idPost: Number(idPost)})
