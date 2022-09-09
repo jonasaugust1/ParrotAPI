@@ -23,8 +23,6 @@ routes.delete('/user/:idUser', new UserController().deleteUser)
 
 
 
-routes.delete('/delete', new PostController().destroy)
-
 routes.get('/profile', checkJwt, new AuthController().getProfile)
 
 
