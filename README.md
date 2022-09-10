@@ -53,6 +53,7 @@ Os desenvolvedores do back-end serão responsáveis por construir a API utilizan
 - DB_PASS="senha do seu usuario mysql"
 - DB_NAME="parrot"
 - JWT_SECRET="criar senha com caracteres validos"
+- PORT="porta que o servidor vai rodar. Ex: 3000"
 
 3. Criar banco de dados sem tabelas no seu mysql.
 4. Utilize os comandos `npm run migration:generate`, e depois `npm run migration:run` para criação das tabelas no seu banco de dados.
