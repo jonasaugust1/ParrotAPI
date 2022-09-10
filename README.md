@@ -51,7 +51,7 @@ Os desenvolvedores do back-end serão responsáveis por construir a API utilizan
 - DB_PORT="a porta do seu mysql, por padrão usamos 3306"
 - DB_USER="nome de usuario do seu mysql"
 - DB_PASS="senha do seu usuario mysql"
-- DB_NAME="parrot"
+- DB_NAME="aqui você pode criar um nome para a sua data base. Utilizamos parrotapi"
 - JWT_SECRET="criar senha com caracteres validos"
 - PORT="porta que o servidor vai rodar. Ex: 3000"
 
