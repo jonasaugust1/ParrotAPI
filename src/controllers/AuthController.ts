@@ -17,13 +17,13 @@ class AuthController {
         const user = await userRepository.findOneBy({email})
 
         if(!user) {
-            return res.json({message: "E-mail ou senha inválidos"})
+            return res.status(400).json({message: "E-mail ou senha inválidos"})
         }
 
         const verifyPass = await bcrypt.compare(password, user.password)
 
         if(!verifyPass) {
-            return res.json({message: "E-mail ou senha inválidos"})
+            return res.status(400).json({message: "E-mail ou senha inválidos"})
         }
 
         const token = jwt.sign(
@@ -34,7 +34,7 @@ class AuthController {
 
         const {password: _, ...userLogin} = user
 
-        return res.json({
+        return res.status(201).json({
             user: userLogin,
             token: token
         })
