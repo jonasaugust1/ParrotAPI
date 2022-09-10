@@ -56,7 +56,7 @@ Os desenvolvedores do back-end serão responsáveis por construir a API utilizan
 - PORT="porta que o servidor vai rodar. Ex: 3000"
 
 3. Criar banco de dados sem tabelas no seu mysql.
-4. Utilize os comandos `npm run migration:generate`, e depois `npm run migration:run` para criação das tabelas no seu banco de dados.
+4. Utilize o comando `npm run migration:run` para criação das tabelas no seu banco de dados.
 5. Use o comando `npm run dev` ou `yarn dev` para iniciar sua conexão com o servidor
 6. Caso tudo tenha dado certo, você está prontx para testar a API, caso mão, revise o passo-a-passo
 
