@@ -3,7 +3,7 @@ import express from "express";
 import * as bodyparser from "body-parser";
 import helmet from "helmet";
 import cors from "cors";
-import routes from "./routes"
+import routes from "./routes/index"
 import { AppDataSource } from "./data-source";
 
 AppDataSource.initialize()

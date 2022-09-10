@@ -11,7 +11,7 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
     const { authorization } = req.headers
 
     if (!authorization) {
-        return res.json({ message: "Não autorizado" })
+        return res.status(401).json({ message: "Não autorizado" })
     }
 
     const token = authorization.split(" ")[1]
