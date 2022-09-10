@@ -55,10 +55,10 @@ Os desenvolvedores do back-end serão responsáveis por construir a API utilizan
 - JWT_SECRET="criar senha com caracteres validos"
 - PORT="porta que o servidor vai rodar. Ex: 3000"
 
-3. Criar banco de dados sem tabelas no seu mysql.
-4. Utilize o comando `npm run migration:run` para criação das tabelas no seu banco de dados.
+3. Criar banco de dados com o comando `npm run db:create` ou `yarn db:create`.
+4. Utilize o comando `npm run migration:run` ou `yarn migration:run` para criação das tabelas no seu banco de dados.
 5. Use o comando `npm run dev` ou `yarn dev` para iniciar sua conexão com o servidor
-6. Caso tudo tenha dado certo, você está prontx para testar a API, caso mão, revise o passo-a-passo
+6. Caso tudo tenha dado certo, você está pronto para testar a API, caso não, revise o passo-a-passo
 
 
 ---
