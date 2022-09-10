@@ -47,12 +47,12 @@ Os desenvolvedores do back-end serão responsáveis por construir a API utilizan
 
 1. Após clonar o repositório, executar o comando `npm install` ou `yarn install`.
 2. Criar um arquivo `.env` e alterar a conexão do banco de dados com as seguintes instruções:
-      DB_HOST="local irá rodar o servidor, por padrão usamos localhost"
-      DB_PORT="a porta do seu mysql, por padrão usamos 3306"
-      DB_USER="nome de usuario do seu mysql"
-      DB_PASS="senha do seu usuario mysql"
-      DB_NAME="parrot"
-      JWT_SECRET="criar senha com caracteres validos"
+- DB_HOST="local irá rodar o servidor, por padrão usamos localhost"
+- DB_PORT="a porta do seu mysql, por padrão usamos 3306"
+- DB_USER="nome de usuario do seu mysql"
+- DB_PASS="senha do seu usuario mysql"
+- DB_NAME="parrot"
+- JWT_SECRET="criar senha com caracteres validos"
 
 3. Criar banco de dados sem tabelas no seu mysql.
 4. Utilize os comandos `npm run migration:generate`, e depois `npm run migration:run` para criação das tabelas no seu banco de dados.
